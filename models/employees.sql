@@ -35,7 +35,7 @@ final as (
 
     left join PC_FIVETRAN_DB.AVSTEP3.SALARIES using (emp_no)
 
-    )
+    );
 
-    select * from final;
+    select * from final
 
