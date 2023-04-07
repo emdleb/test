@@ -34,5 +34,6 @@ clean-targets:         # directories to be removed by `dbt clean`
 models:
   AV_step3:
     # Applies to all files under models/example/
-    example:
-      materialized: view
+    emp:
+      schema: employees
+      materialized: table
