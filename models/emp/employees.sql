@@ -29,25 +29,45 @@ departures as (
 from PC_FIVETRAN_DB.AVSTEP3.DEPARTURES
 ),
 
-final as (
+dept_emp as (
     select
-        PC_FIVETRAN_DB.AVSTEP3.EMPLOYEES.birth_date,
-        PC_FIVETRAN_DB.AVSTEP3.EMPLOYEES.emp_no,
-        PC_FIVETRAN_DB.AVSTEP3.EMPLOYEES.emp_title_id,
-        PC_FIVETRAN_DB.AVSTEP3.EMPLOYEES.first_name,
-        PC_FIVETRAN_DB.AVSTEP3.EMPLOYEES.last_name,
-        PC_FIVETRAN_DB.AVSTEP3.EMPLOYEES.sex,
-        PC_FIVETRAN_DB.AVSTEP3.EMPLOYEES.hire_date,
-        PC_FIVETRAN_DB.AVSTEP3.SALARIES.salary,
-        PC_FIVETRAN_DB.AVSTEP3.DEPARTURES.exit_date,
-        PC_FIVETRAN_DB.AVSTEP3.DEPARTURES.exit_reason
+        dept_no,
+        emp_no
 
-    FROM PC_FIVETRAN_DB.AVSTEP3.EMPLOYEES
+from PC_FIVETRAN_DB.AVSTEP3.DEPT_EMP
+),
 
-    left join PC_FIVETRAN_DB.AVSTEP3.SALARIES using (emp_no)
-    left join PC_FIVETRAN_DB.AVSTEP3.DEPARTURES using (emp_no)
+titles as (
+    select
+        title,
+        title_id
 
-    )
+from PC_FIVETRAN_DB.AVSTEP3.TITLES
+),
 
-    select * from final
+final AS (
+    SELECT
+        e.birth_date,
+        e.emp_no,
+        e.emp_title_id,
+        e.first_name,
+        e.last_name,
+        e.sex,
+        e.hire_date,
+        s.salary,
+        d.exit_date,
+        d.exit_reason,
+        t.title,
+        de.dept_no
+    FROM PC_FIVETRAN_DB.AVSTEP3.EMPLOYEES e
+    LEFT JOIN PC_FIVETRAN_DB.AVSTEP3.SALARIES s
+        ON e.emp_no = s.emp_no
+    LEFT JOIN PC_FIVETRAN_DB.AVSTEP3.DEPARTURES d
+        ON e.emp_no = d.emp_no
+    LEFT JOIN PC_FIVETRAN_DB.AVSTEP3.TITLES t
+        ON e.emp_title_id = t.title_id
+    LEFT JOIN PC_FIVETRAN_DB.AVSTEP3.DEPT_EMP de
+        ON e.emp_no = de.emp_no
+)
+SELECT * FROM final
 
